@@ -18,6 +18,8 @@ public class ScheduledTask {
     @Autowired
     private SimpMessagingTemplate template;
 
+    private CompilerService compilerService = new CompilerService();
+
     private static final Logger log = LoggerFactory.getLogger(ScheduledTask.class);
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -27,6 +29,9 @@ public class ScheduledTask {
     public void reportCurrentTime() {
         log.info("The time is now {}", dateFormat.format(new Date()));
         var text = new Greeting("The time is now " + dateFormat.format(new Date()));
+        var codeResult =  new Greeting( compilerService.foo() );
+        log.info("Code result:", codeResult);
         template.convertAndSend("/topic/greetings", text);
+        template.convertAndSend("/topic/greetings", codeResult);
     }
 }
